@@ -1,0 +1,43 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Antigravity: Desktop Workbench",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run",
+                "tauri",
+                "dev"
+            ],
+            "cwd": "${workspaceFolder}/apisec",
+            "console": "integratedTerminal"
+        },
+        {
+            "type": "cppvsdbg",
+            "request": "launch",
+            "name": "Antigravity: Debug Rust (MSVC)",
+            "program": "${workspaceFolder}/apisec/src-tauri/target/debug/tauri-app.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}/apisec",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Antigravity: Debug UI (Chrome)",
+            "type": "chrome",
+            "request": "launch",
+            "url": "http://localhost:1420",
+            "webRoot": "${workspaceFolder}/apisec/src"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Full Stack Blast Off",
+            "configurations": [
+                "Antigravity: Desktop Workbench",
+                "Antigravity: Debug UI (Chrome)"
+            ]
+        }
+    ]
+}

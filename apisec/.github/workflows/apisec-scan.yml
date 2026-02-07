@@ -1,0 +1,70 @@
+name: APISec Security Scan
+
+on:
+  pull_request:
+    branches: [main, develop]
+  push:
+    branches: [main]
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      contents: read
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install APISec CLI
+        run: npm install -g @apisec/cli
+
+      - name: Run Security Scan
+        id: scan
+        run: |
+          # Scan HAR files from test artifacts
+          apisec scan \
+            --input ./tests/traffic.har \
+            --sarif \
+            --output apisec-results.sarif \
+            --fail-on high
+        continue-on-error: true
+
+      - name: Upload SARIF to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: apisec-results.sarif
+          category: apisec-security-scan
+
+      - name: Comment PR with Results
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const sarif = JSON.parse(fs.readFileSync('apisec-results.sarif', 'utf8'));
+            const findings = sarif.runs[0].results.length;
+            
+            const comment = `## 🔒 APISec Security Scan Results
+            
+            **Findings:** ${findings}
+            
+            ${findings > 0 ? '⚠️ Security vulnerabilities detected. Review the Security tab for details.' : '✅ No security issues found!'}
+            `;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            });
+
+      - name: Fail if vulnerabilities found
+        if: steps.scan.outcome == 'failure'
+        run: exit 1

@@ -1,0 +1,49 @@
+[package]
+name = "tauri-app"
+version = "0.1.0"
+description = "A Tauri App"
+authors = ["you"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "tauri_app_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-opener = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+reqwest = { version = "0.12", features = ["json", "rustls-tls", "stream", "multipart"] }
+tokio = { version = "1", features = ["full"] }
+scraper = "0.22"
+regex = "1"
+calamine = "0.26"
+hickory-resolver = "0.24"
+url = "2.5"
+chrono = { version = "0.4", features = ["serde"] }
+anyhow = "1.0"
+tauri-plugin-clipboard-manager = "2.3.2"
+base64 = "0.22.1"
+sqlx = { version = "0.8.6", features = ["sqlite", "runtime-tokio-rustls", "chrono"] }
+hyper = { version = "0.14", features = ["full"] }
+tower = { version = "0.4", features = ["full"] }
+http = "0.2"
+tokio-tungstenite = "0.21"
+dashmap = "6.1.0"
+uuid = { version = "1.20.0", features = ["v4"] }
+rcgen = "0.13"
+tokio-rustls = "0.26"
+rustls-pemfile = "2.2"
+rustls = { version = "0.23", features = ["ring"] }
+serde_yml = "0.0.12"
+

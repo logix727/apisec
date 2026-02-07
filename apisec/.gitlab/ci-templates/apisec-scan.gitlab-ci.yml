@@ -1,0 +1,56 @@
+# APISec Security Scan
+# GitLab CI/CD Template for API Security Testing
+
+apisec_scan:
+  stage: test
+  image: node:18-alpine
+  
+  before_script:
+    - npm install -g @apisec/cli
+  
+  script:
+    - |
+      echo "🔍 Running APISec Security Scan..."
+      apisec scan \
+        --input ./tests/api-traffic.har \
+        --output apisec-report.txt \
+        --fail-on high
+  
+  artifacts:
+    reports:
+      # GitLab Security Report format
+      sast: apisec-report.json
+    paths:
+      - apisec-report.txt
+    expire_in: 30 days
+    when: always
+  
+  allow_failure: false
+  
+  only:
+    - merge_requests
+    - main
+    - develop
+
+# Optional: SARIF export for GitLab Ultimate
+apisec_sarif:
+  stage: test
+  image: node:18-alpine
+  
+  before_script:
+    - npm install -g @apisec/cli
+  
+  script:
+    - |
+      apisec scan \
+        --input ./tests/api-traffic.har \
+        --sarif \
+        --output gl-sast-report.json
+  
+  artifacts:
+    reports:
+      sast: gl-sast-report.json
+    expire_in: 30 days
+  
+  only:
+    - merge_requests

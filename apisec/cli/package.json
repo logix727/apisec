@@ -1,0 +1,30 @@
+{
+    "name": "@apisec/cli",
+    "version": "1.0.0",
+    "description": "APISec Analyst Pro - Headless API Security Scanner for CI/CD",
+    "main": "apisec.js",
+    "bin": {
+        "apisec": "./apisec.js"
+    },
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "security",
+        "api",
+        "scanner",
+        "ci",
+        "cd",
+        "sarif",
+        "owasp"
+    ],
+    "author": "APISec Team",
+    "license": "MIT",
+    "engines": {
+        "node": ">=14.0.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/apisec-pro/apisec"
+    }
+}
